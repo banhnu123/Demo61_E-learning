@@ -72,7 +72,7 @@ public class LessonsController {
         lessons.setHours(lessonsDTO.getHours());
         lessons.setDescription(lessonsDTO.getDescription());
         lessonsRepo.save(lessons);
-        return ResponseEntity.ok(lessons);
+        return ResponseEntity.ok( "cập nhật thành công ");
     }
 
     //Xoá bài học
@@ -84,7 +84,7 @@ public class LessonsController {
         }
         lessonsRepo.deleteById(id);
         return ResponseEntity.ok("Xoá thành công");
-    
 
+    }
 
 }

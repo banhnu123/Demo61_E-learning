@@ -74,19 +74,37 @@ public class CoursesController {
         coursesRepo.save(courses);
         return ResponseEntity.ok("Tạo khoá học thành công" + courses);
     }
+
+    // cập nhật khoá học
+    @PutMapping("courses/{id}")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody CoursesDTO coursesDTO) {
+        Optional<Courses> opCourses = coursesRepo.findById(id);
+        if (opCourses.isEmpty()) {
+            return ResponseEntity.badRequest().body("Id không tồn tại" );
+        }else if (coursesDTO.getCoursesName() == null) {
+            return ResponseEntity.badRequest().body("Cần phải điền tên khoá học");
+        }else if (coursesDTO.getHours() == 0) {
+            return ResponseEntity.badRequest().body("Cần phải điền số giờ");
+        }else if (coursesDTO.getSessions() == null) {
+            return ResponseEntity.badRequest().body("Cần phải điền số buổi");
+        }else if (coursesDTO.getDescription() == null) {
+            return ResponseEntity.badRequest().body("Cần phải điền mô tả");
+        }
+        Courses courses = opCourses.get();
+        courses.setCoursesName(coursesDTO.getCoursesName());
+        courses.setHours(coursesDTO.getHours());
+        courses.setSessions(coursesDTO.getSessions());
+        courses.setDescription(coursesDTO.getDescription());
+        coursesRepo.save(courses);
+        return ResponseEntity.ok("Cập nhật khoá học thành công" + courses);
+
+
+    }
+
     // xoá khoá học
     @DeleteMapping("courses/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         Optional<Courses> opCourses = coursesRepo.findById(id);
-        Optional<CoursesDTO> opCoursesDTO = coursesRepo.findById(id).map(course -> {
-            CoursesDTO coursesDTO = new CoursesDTO();
-            coursesDTO.setId(course.getId());
-            coursesDTO.setCoursesName(course.getCoursesName());
-            coursesDTO.setHours(course.getHours());
-            coursesDTO.setSessions(course.getSessions());
-            coursesDTO.setDescription(course.getDescription());
-            return coursesDTO;
-        });
         if (opCourses.isEmpty()) {
             return ResponseEntity.badRequest().body("Id không tồn tại" );
         }
